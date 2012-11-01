@@ -10,6 +10,7 @@
 #import "UINavigationItem+JTRevealSidebarV2.h"
 #import "JTRevealSidebarV2Delegate.h"
 #import <objc/runtime.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface UIViewController (JTRevealSidebarV2Private)
 
@@ -104,6 +105,15 @@ static char *revealedStateKey;
     return expectedFrame;
 }
 
+-(void)showShadow {
+    self.view.layer.shadowRadius = 10;
+    self.view.layer.shadowOpacity = 0.5;
+    self.view.layer.shadowColor = [[UIColor blackColor] CGColor];
+    self.view.layer.shadowOffset = CGSizeZero;
+    self.view.layer.shadowPath = [[UIBezierPath bezierPathWithRect:self.view.bounds] CGPath];
+    self.view.layer.cornerRadius = 5;
+}
+
 - (void)toggleRevealState:(JTRevealedState)openingState {
     JTRevealedState state = openingState;
     if (self.revealedState == openingState) {
@@ -159,6 +169,7 @@ static char *revealedStateKey;
 //        self.view.transform = CGAffineTransformTranslate([self baseTransform], width, 0);
         
         self.view.frame = CGRectOffset(self.view.frame, width, 0);
+        [self showShadow];
 
     } else {
         [UIView beginAnimations:@"hideSidebarView" context:(void *)SIDEBAR_VIEW_TAG];
